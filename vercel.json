@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "pages/api/**/*.js": {
+      "runtime": "nodejs14.x"
+    },
+    "pages/api/**/*.ts": {
+      "runtime": "nodejs14.x"
+    }
+  }
+}
