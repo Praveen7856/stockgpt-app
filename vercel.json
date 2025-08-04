@@ -1,10 +1,14 @@
 {
+
   "functions": {
     "pages/api/**/*.js": {
-      "runtime": "nodejs14.x"
+      "runtime": "nodejs18.x"
     },
     "pages/api/**/*.ts": {
-      "runtime": "nodejs14.x"
+      "runtime": "nodejs18.x"
     }
-  }
+  },
+  "builds": [
+    { "src": "next.config.js", "use": "@vercel/next" }
+  ]
 }
