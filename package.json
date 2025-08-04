@@ -7,11 +7,12 @@
   },
   "scripts": {
     "dev": "next dev",
-    "dev:secure": "./scripts/start-secure.sh",
+    "dev:secure": "./scripts/start-dev.sh",
     "build": "next build",
     "start": "next start",
     "encrypt-env": "node scripts/secure-env.js",
-    "check-env": "node scripts/check-env.js"
+    "check-env": "node scripts/check-env.js",
+    "reencrypt": "./scripts/reencrypt-env.sh"
   },
   "dependencies": {
     "autoprefixer": "^9.8.6",

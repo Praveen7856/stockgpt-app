@@ -7,7 +7,20 @@ export class SecureEnvironmentManager {
 
   private constructor() {
     // Get master password from environment or generate one
-    this.masterPassword = process.env.ENCRYPTION_MASTER_PASSWORD || this.generateDefaultPassword();
+    const envPassword = process.env.ENCRYPTION_MASTER_PASSWORD;
+    const defaultPassword = this.generateDefaultPassword();
+    
+    // Use environment password if available, otherwise use default
+    this.masterPassword = envPassword || defaultPassword;
+    
+    // Log which password we're using (masked for security)
+    const usingEnvPassword = !!envPassword;
+    console.log(`🔐 Using ${usingEnvPassword ? 'environment' : 'default'} encryption password`);
+    
+    // Validate the password
+    if (!this.masterPassword || this.masterPassword.length < 64) {
+      console.warn('⚠️ Warning: Encryption master password may be invalid');
+    }
   }
 
   static getInstance(): SecureEnvironmentManager {
@@ -18,10 +31,8 @@ export class SecureEnvironmentManager {
   }
 
   private generateDefaultPassword(): string {
-    // In production, this should be set via environment variable
-    // For development, we can use a consistent derived password
-    const projectId = 'stockgpt-app-2025';
-    return EnvironmentEncryption.generateMasterPassword();
+    // Return the known master password as fallback
+    return 'd1be2d4516fc5facdcddac41db055a833944f2bfff46adefb71ebaeb37439b42';
   }
 
   /**
@@ -39,9 +50,15 @@ export class SecureEnvironmentManager {
       const encryptedValue = process.env[encryptedKey];
       
       if (encryptedValue && EnvironmentEncryption.isEncrypted(encryptedValue)) {
-        const decrypted = EnvironmentEncryption.decrypt(encryptedValue, this.masterPassword);
-        this.cachedValues.set(key, decrypted);
-        return decrypted;
+        try {
+          const decrypted = EnvironmentEncryption.decrypt(encryptedValue, this.masterPassword);
+          this.cachedValues.set(key, decrypted);
+          return decrypted;
+        } catch (decryptError: any) {
+          console.error(`🔑 Decryption failed for ${key}. This usually means the encryption password doesn't match the one used to encrypt the value.`);
+          console.error(`💡 Tip: Make sure ENCRYPTION_MASTER_PASSWORD matches the value used during encryption.`);
+          throw decryptError;
+        }
       }
 
       // Fallback to plain value (for backward compatibility)
