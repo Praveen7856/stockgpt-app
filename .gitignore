@@ -10,9 +10,13 @@ out/
 
 # Environment variables
 .env.local
+.env.local.backup
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Security
+ENCRYPTION_MASTER_PASSWORD
 
 # Logs
 *.log

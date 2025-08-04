@@ -1,4 +1,6 @@
 // AI API utility to handle multiple providers
+import { getSecureEnvVar } from './secureEnvironment';
+
 export interface AIResponse {
   success: boolean;
   data?: string;
@@ -11,7 +13,7 @@ export class AIProviderManager {
 
   constructor() {
     // Get priority from env or use default
-    const priority = process.env.API_PRIORITY || 'openai,huggingface,cohere,google,groq';
+    const priority = getSecureEnvVar('API_PRIORITY') || 'openai,huggingface,cohere,google,groq';
     this.providers = priority.split(',').map(p => p.trim());
   }
 
@@ -51,7 +53,8 @@ export class AIProviderManager {
   }
 
   private async callOpenAI(prompt: string): Promise<AIResponse> {
-    if (!process.env.OPENAI_API_KEY) {
+    const apiKey = getSecureEnvVar('OPENAI_API_KEY');
+    if (!apiKey) {
       throw new Error('OpenAI API key not found');
     }
 
@@ -59,7 +62,7 @@ export class AIProviderManager {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+        'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
         model: 'gpt-3.5-turbo',
@@ -83,14 +86,15 @@ export class AIProviderManager {
   }
 
   private async callHuggingFace(prompt: string): Promise<AIResponse> {
-    if (!process.env.HUGGINGFACE_API_KEY) {
+    const apiKey = getSecureEnvVar('HUGGINGFACE_API_KEY');
+    if (!apiKey) {
       throw new Error('Hugging Face API key not found');
     }
 
     const response = await fetch('https://api-inference.huggingface.co/models/microsoft/DialoGPT-large', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.HUGGINGFACE_API_KEY}`,
+        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -116,14 +120,15 @@ export class AIProviderManager {
   }
 
   private async callCohere(prompt: string): Promise<AIResponse> {
-    if (!process.env.COHERE_API_KEY) {
+    const apiKey = getSecureEnvVar('COHERE_API_KEY');
+    if (!apiKey) {
       throw new Error('Cohere API key not found');
     }
 
     const response = await fetch('https://api.cohere.ai/v1/generate', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.COHERE_API_KEY}`,
+        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -147,11 +152,12 @@ export class AIProviderManager {
   }
 
   private async callGoogleAI(prompt: string): Promise<AIResponse> {
-    if (!process.env.GOOGLE_AI_API_KEY) {
+    const apiKey = getSecureEnvVar('GOOGLE_AI_API_KEY');
+    if (!apiKey) {
       throw new Error('Google AI API key not found');
     }
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GOOGLE_AI_API_KEY}`, {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -176,14 +182,15 @@ export class AIProviderManager {
   }
 
   private async callGroq(prompt: string): Promise<AIResponse> {
-    if (!process.env.GROQ_API_KEY) {
+    const apiKey = getSecureEnvVar('GROQ_API_KEY');
+    if (!apiKey) {
       throw new Error('Groq API key not found');
     }
 
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
+        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
