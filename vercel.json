@@ -1,1 +1,10 @@
-{}
+{
+  "env": {
+    "ENCRYPTION_MASTER_PASSWORD": "@encryption-master-password"
+  },
+  "build": {
+    "env": {
+      "ENCRYPTION_MASTER_PASSWORD": "@encryption-master-password"
+    }
+  }
+}
