@@ -19,13 +19,15 @@ Environments: Production, Preview, Development
 2. Select your `stockgpt-app` project
 3. Navigate to **Settings** → **Environment Variables**
 4. Click **Add New**
-5. Enter the variable name and value
-6. Select the environments where it should be available
-7. Click **Save**
+5. Enter the variable name `ENCRYPTION_MASTER_PASSWORD` 
+6. Enter the value: `d1be2d4516fc5facdcddac41db055a833944f2bfff46adefb71ebaeb37439b42`
+7. Select all environments (Production, Preview, Development)
+8. Click **Save**
+9. **Important**: After setting the environment variable, redeploy your application
 
 ### Method 2: Vercel CLI
 ```bash
-# Set for all environments
+# Set the environment variable directly (recommended for fresh projects)
 vercel env add ENCRYPTION_MASTER_PASSWORD
 
 # When prompted, enter the value:

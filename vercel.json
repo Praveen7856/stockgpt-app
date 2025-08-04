@@ -1,10 +1,6 @@
 {
-  "env": {
-    "ENCRYPTION_MASTER_PASSWORD": "@encryption-master-password"
-  },
-  "build": {
-    "env": {
-      "ENCRYPTION_MASTER_PASSWORD": "@encryption-master-password"
-    }
-  }
+  "buildCommand": "next build",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "cleanUrls": true
 }
